@@ -1,0 +1,125 @@
+{% load static %}
+{% load moderator_filter %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Your F1 news portal</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}"/>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger bg-gradient">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">F1 Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="{% url 'post-index' %}">News</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'video-index' %}">Videos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'driver-standings' %}">Standings</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'index' %}">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <form class="d-flex" method="GET" action="{% url 'search-results' %}">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                               name="query">
+                        <button class="btn btn-outline-light" type="submit">Search</button>
+                    </form>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'profile' pk=user.pk %}">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                    {% if user|is_moderator_or_admin %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Administration
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'video-add' %}">Add Video</a></li>
+                                <li><a class="dropdown-item" href="#">Add News</a></li>
+                                <li><a class="dropdown-item" href="{% url 'submit-race-result' %}">Add Race Results</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'login' %}">
+                            <button class="btn btn-outline-light">Login</button>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'register' %}">
+                            <button class="btn btn-outline-light">Register</button>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% block content %}
+{% endblock %}
+
+<!-- Login Modal -->
+
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Include your registration form here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <!-- Add any other buttons you may need -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center text-lg-start bg-danger bg-gradient">
+    <div class="container d-flex justify-content-center py-5">
+        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+            <i class="fab fa-facebook-f"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+            <i class="fab fa-youtube"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+            <i class="fab fa-instagram"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+            <i class="fab fa-twitter"></i>
+        </button>
+    </div>
+
+    <!-- Copyright -->
+    <div class="text-center text-white p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        © 2020 Copyright:
+        <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JavaScript Bundle (includes Popper) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

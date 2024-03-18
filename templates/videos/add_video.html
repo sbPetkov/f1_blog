@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="mb-4">Add Video</h1>
+                <form action="{% url 'video-add' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_title" class="form-label">Title</label>
+                        <input type="text" name="title" id="id_title" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_content" class="form-label">Description</label>
+                        <textarea name="content" id="id_content" class="form-control"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_video" class="form-label">Video URL</label>
+                        <input type="text" name="video" id="id_video" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Add Video</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

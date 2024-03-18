@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4">Submit Race Results</h1>
+            <form method="post" action="{% url 'submit-race-result' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_race" class="form-label">Race:</label>
+                    {{ form.race }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_fastest_lap" class="form-label">Driver with Fastest Lap:</label>
+                    <select name="fastest_lap" id="id_fastest_lap" class="form-select">
+                        {% for driver in drivers %}
+                            <option value="{{ driver.id }}">{{ driver.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Driver</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in form %}
+                            {% if 'driver_' in field.name %}
+                                <tr>
+                                    <td>{{ field.label }}</td>
+                                    <td>{{ field }}</td>
+                                    <td>
+                                        {% if field_name == form.fastest_lap.html_name %}
+                                            {{ form.fastest_lap }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

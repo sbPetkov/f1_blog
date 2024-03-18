@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+    <div class="container">
+        <br><br>
+        <h5 class="card-title">{{ race.title }}</h5>
+        <br>
+        <div class="card mb-3">
+            <img src="{{ race.image.url }}" class="card-img-top" alt="{{ race.title }}" style="max-width: 350px;>
+        <div class=" card-body">
+
+            <p class="card-text">{{ race.start_date|date:"d M" }} - {{ race.end_date|date:"d M" }}</p>
+            <p class="card-text">Length:{{ race.track_length }} km</p>
+            <ol>
+                {% for result in race_results %}
+                    <li>{{ result.driver.name }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+{% endblock %}

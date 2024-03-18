@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load embed_video_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1>{{ video.title }}</h1>
+            <div class="embed-responsive embed-responsive-16by9">
+                {% video video.video '853x480' %}
+            </div>
+            <p>{{ video.content }}</p>
+
+            <!-- Add a Comment form -->
+            <h2>Add a Comment</h2>
+            <form id="comment-form">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <textarea class="form-control" name="text" placeholder="Enter your comment"></textarea>
+                    <button class="btn btn-primary" type="submit">Submit Comment</button>
+                </div>
+            </form>
+
+            <!-- Display comments for this video -->
+            <h2>Comments</h2>
+            <div class="comment-section border rounded p-3"> <!-- Added border, rounded, and padding -->
+                <ul id="comment-list" class="list-unstyled">
+                    {% for comment in comments %}
+                        <li class="comment-item border rounded p-3 mb-3"> <!-- Added border, rounded, and margin -->
+                            {{ comment.author.profile.first_name }}: {{ comment.text }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AJAX script for submitting comments -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#comment-form').on('submit', function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "add_comment" video.id %}',
+                data: $(this).serialize(),
+                success: function (response) {
+                    var newComment = '<li class="comment-item border rounded p-3 mb-3">' +
+                        response.author_name + ': ' + response.text +
+                        '</li>';
+                    
+                    // Prepend the new comment to the comment list
+                    $('#comment-list').prepend(newComment);
+                    
+                    // Reset the comment form
+                    $('#comment-form')[0].reset();
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

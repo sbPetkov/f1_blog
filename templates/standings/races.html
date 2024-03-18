@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+    <br><br>
+    <h2 class="text-center">Past Races</h2>
+    <br>
+        <div class="row">
+            {% for race in past_races %}
+                <div class="col-md-4 mb-4">
+                    <div class="card rounded-3 bg-gradient">
+                        <div class="card-body">
+                            <div class="text-center fw-bold">Round {{ race.pk }}</div>
+                            <div class="d-flex justify-content-between">
+                                <div class="text-start">{{ race.start_date|date:"d M" }}
+                                    - {{ race.end_date|date:"d M" }}</div>
+                                <img src="{{ race.flag.url }}" alt="Flag" class="img-fluid rounded"
+                                     style="max-width: 40px;">
+                            </div>
+                            <hr>
+                            <h5 class="card-title">{{ race.title }}</h5>
+                            <p class="card-text">Track Length: {{ race.track_length }}</p>
+                            <img src="{{ race.image.url }}" class="img-fluid" alt="Race Image">
+                        </div>
+                        <a class="btn btn-primary" href="{% url 'track-result' pk=race.pk %}">Race results→</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <br><br>
+    <h2 class="text-center">Next Race</h2>
+    <br>
+    <div class="container">
+        <div class="card rounded-3 text-bg-info">
+            <div class="card-body">
+                <div class="text-center fw-bold">Round {{ next_race.pk }}</div>
+                <div class="d-flex justify-content-between">
+                    <div class="text-start">{{ next_race.start_date|date:"d M" }}
+                        - {{ next_race.end_date|date:"d M" }}</div>
+                    <img src="{{ next_race.flag.url }}" alt="Flag" class="img-fluid rounded"
+                         style="max-width: 40px;">
+                </div>
+                <hr>
+                <h5 class="card-title">{{ next_race.title }}</h5>
+                <p class="card-text">Track Length: {{ next_race.track_length }}</p>
+                <img src="{{ next_race.image.url }}" class="img-fluid" alt="Race Image">
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <h2 class="text-center">Races Later On</h2>
+    <br>
+    <div class="container">
+        <div class="row">
+            {% for race in other_races %}
+                <div class="col-md-4 mb-4">
+                    <div class="card rounded-3">
+                        <div class="card-body">
+                            <div class="text-center fw-bold">Round {{ race.pk }}</div>
+                            <div class="d-flex justify-content-between">
+                                <div class="text-start">{{ race.start_date|date:"d M" }}
+                                    - {{ race.end_date|date:"d M" }}</div>
+                                <img src="{{ race.flag.url }}" alt="Flag" class="img-fluid rounded"
+                                     style="max-width: 40px;">
+                            </div>
+                            <hr>
+                            <h5 class="card-title">{{ race.title }}</h5>
+                            <p class="card-text">Track Length: {{ race.track_length }}</p>
+                            <img src="{{ race.image.url }}" class="img-fluid" alt="Race Image">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}

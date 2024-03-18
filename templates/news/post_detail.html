@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <br><br>
+                <h1>{{ post.title }}</h1>
+                <br><br>
+
+                <img src="{{ post.photo.url }}" alt="Post Photo">
+                <br><br>
+
+                <p>{{ post.content }}</p>
+                <br><br>
+
+                <h2>Add a Comment</h2>
+                <form id="comment-form">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <textarea class="form-control" name="text" placeholder="Enter your comment"></textarea>
+                        <button class="btn btn-primary" type="submit">Submit Comment</button>
+                    </div>
+                </form>
+                <h2>Comments</h2>
+                <div class="comment-section border rounded p-3">
+                    <ul id="comment-list" class="list-unstyled">
+                    {% if comments %}
+                        {% for comment in comments %}
+                            <li class="comment-item border rounded p-3 mb-3">
+                                {{ comment.author.profile.first_name }}: {{ comment.text }}
+                                <div class="float-end">
+                                    {% if comment.liked_by_current_user %}
+                                        <img width="20" class="like-button" src="{% static 'icons/liked.png' %}"
+                                             alt="Liked"
+                                             data-comment-id="{{ comment.id }}" data-initial-state="true">
+                                    {% else %}
+                                        <img width="20" class="like-button" src="{% static 'icons/not_liked.png' %}"
+                                             alt="Not Liked"
+                                             data-comment-id="{{ comment.id }}" data-initial-state="false">
+                                    {% endif %}
+                                    <span id="like-count-{{ comment.id }}" class="ms-2">{{ comment.likes.count }}</span>
+                                    likes
+                                </div>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                    <h4>Add First Comment</h4>
+                    {% endif %}
+                    </ul>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function updateLikeButtonState($button, liked) {
+                if (liked) {
+                    $button.attr('src', '{% static 'icons/liked.png' %}');
+                    $button.attr('alt', 'Liked');
+                } else {
+                    $button.attr('src', '{% static 'icons/not_liked.png' %}');
+                    $button.attr('alt', 'Not Liked');
+                }
+            }
+
+            $('.like-button').each(function () {
+                var $button = $(this);
+                var initialState = $button.data('initial-state');
+                updateLikeButtonState($button, initialState);
+            });
+
+            $('.like-button').on('click', function (event) {
+                event.preventDefault();
+                var $button = $(this);
+                var commentId = $button.data('comment-id');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "toggle-like" 0 %}'.replace('0', commentId),
+                    data: {
+                        'comment_id': commentId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        updateLikeButtonState($button, response.liked);
+                        $('#like-count-' + commentId).text(response.likes_count);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                    }
+                });
+            });
+
+            $('#comment-form').on('submit', function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "post-details" post.id %}',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        var newComment = '<li class="comment-item border rounded p-3 mb-3">' +
+                            response.author_first_name + ': ' + response.text +
+                            '<div class="float-end">' +
+                            '<img width="20" class="like-button" src="{% static 'icons/not_liked.png' %}" alt="Not Liked" ' +
+                            'data-comment-id="' + response.comment_id + '" data-initial-state="false">' +
+                            '<span id="like-count-' + response.comment_id + '" class="ms-2">0</span> likes</div>' +
+                            '</li>';
+
+                        $('#comment-list').prepend(newComment);
+
+                        $('#comment-form')[0].reset();
+
+                        var $newButton = $('#comment-list').find('[data-comment-id="' + response.comment_id + '"]');
+                        updateLikeButtonState($newButton, false);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
