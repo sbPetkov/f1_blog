@@ -16,14 +16,19 @@
                 <p>{{ post.content }}</p>
                 <br><br>
 
-                <h2>Add a Comment</h2>
-                <form id="comment-form">
-                    {% csrf_token %}
-                    <div class="input-group mb-3">
-                        <textarea class="form-control" name="text" placeholder="Enter your comment"></textarea>
-                        <button class="btn btn-primary" type="submit">Submit Comment</button>
-                    </div>
-                </form>
+                {% if user.is_authenticated %}
+                    <h2>Add a Comment</h2>
+                    <form id="comment-form">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <textarea class="form-control" name="text" placeholder="Enter your comment"></textarea>
+                            <button class="btn btn-primary" type="submit">Submit Comment</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <h2 class="align-content-around"><a href="{% url 'login' %}?next={{ request.path }}" class="text-decoration-none text-info">Login to comment</a></h2>
+                    <br>
+                {% endif %}
                 <h2>Comments</h2>
                 <div class="comment-section border rounded p-3">
                     <ul id="comment-list" class="list-unstyled">

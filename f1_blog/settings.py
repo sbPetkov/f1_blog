@@ -50,6 +50,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -93,7 +94,6 @@ LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
-
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
@@ -103,7 +103,6 @@ STATICFILES_DIRS = [
 MEDIA_URL = 'https://%s.s3.amazonaws.com/media/' % 'backendcloud'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 AWS_ACCESS_KEY_ID = 'AKIATCKATZEC7OSAWVBJ'
 AWS_SECRET_ACCESS_KEY = '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'

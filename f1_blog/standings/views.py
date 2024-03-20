@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic import ListView
+from django.db import models
 
-from .models import Race, Driver, RaceResult
+from .models import Race, Driver, RaceResult, Team
 from .forms import RaceResultForm
 
 
@@ -13,6 +14,12 @@ class DriverStandingsView(ListView):
 
     def get_queryset(self):
         return Driver.objects.order_by('-points')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        teams = Team.objects.annotate(total_points=models.Sum('drivers__points')).order_by('-total_points')
+        context['teams'] = teams
+        return context
 
 
 def get_points(position):

@@ -6,7 +6,7 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, TemplateView, View, CreateView, UpdateView
-
+from django.utils.http import url_has_allowed_host_and_scheme
 from f1_blog.news.models import Post
 from f1_blog.standings.models import Race
 from f1_blog.videos.models import Video
@@ -49,6 +49,13 @@ class SearchResultsView(ListView):
 class LoginUserView(LoginView):
     template_name = 'index/login.html'
     redirect_authenticated_user = True
+
+    def get_success_url(self):
+        redirect_to = self.request.GET.get('next')
+        if redirect_to and url_has_allowed_host_and_scheme(redirect_to, allowed_hosts={self.request.get_host()}):
+            return redirect_to
+        return super().get_success_url()
+
 
 
 class RegisterUserView(CreateView):

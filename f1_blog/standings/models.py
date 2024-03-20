@@ -17,7 +17,7 @@ class Team(models.Model):
 
 class Driver(models.Model):
     name = models.CharField(max_length=100)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='drivers')
     points = models.IntegerField(default=0)
 
     def __str__(self):

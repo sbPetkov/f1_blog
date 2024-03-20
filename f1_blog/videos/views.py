@@ -17,10 +17,13 @@ class AddVideoView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+
 class VideoListView(ListView):
     model = Video
     template_name = 'videos/video_list.html'
     context_object_name = 'videos'
+
+    paginate_by = 2
 
     def get_queryset(self):
         queryset = super().get_queryset()
