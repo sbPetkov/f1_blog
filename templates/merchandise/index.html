@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <h1 id="page-title" class="align-content-center">Merchandise</h1>
+        <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-evenly" id="categories"></div>
+        <br><br>
+        <div class="row row-cols-1 row-cols-md-5 g-4" id="merchandise-items"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Function to load merchandise items for a category
+            function loadMerchandiseItems(category) {
+                // Fade out categories
+                $('#categories').fadeOut('slow', function () {
+                    $.ajax({
+                        url: `/api/merchandise/${category}/`,
+                        type: 'GET',
+                        success: function (data) {
+                            $('#page-title').text(category);
+                            $('#merchandise-items').empty();
+                            data.forEach(function (item) {
+                                $('#merchandise-items').append(`
+                                    <div class="col">
+                                        <div class="card">
+                                            <img src="${item.images}" alt="${item.name}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${item.title}</h5>
+                                                <p class="card-text">${item.price} BGN</p>
+                                            </div>
+                                        </div>
+                                    </div>`);
+                            });
+                            // Add back button after listing merchandise items
+                            $('#merchandise-items').after('<br><br><button id="back-btn" class="btn btn-secondary">Back</button>');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+                });
+            }
+
+            // Load categories
+            $.ajax({
+                url: '{% url "category-list" %}',
+                type: 'GET',
+                success: function (data) {
+                    data.forEach(function (category) {
+                        $('#categories').append(`
+                            <div class="col">
+                                <div class="card">
+                                    <img src="${category.images}" class="card-img-top" alt="${category.name}">
+                                    <div class="card-body">
+                                        <h5 id="${category.name}" class="card-title text-decoration-none">${category.name}</h5>
+                                    </div>
+                                </div>
+                            </div>`);
+                    });
+
+                    // Add click event listener to category titles
+                    $('.card-title').click(function () {
+                        var category = $(this).attr('id');
+                        loadMerchandiseItems(category);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+            $(document).on('click', '#back-btn', function () {
+                $('#merchandise-items').fadeOut('slow', function () {
+                    $('#categories').fadeIn('slow');
+                    
+                    $('#page-title').text('Merchandise');
+                    // Remove back button
+                    $('#back-btn').remove();
+                });
+            });
+        });
+    </script>
+{% endblock %}

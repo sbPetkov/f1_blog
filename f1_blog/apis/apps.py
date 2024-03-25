@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class MakemigrationsConfig(AppConfig):
+class ApisConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'makemigrations'
+    name = 'f1_blog.apis'

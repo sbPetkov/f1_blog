@@ -5,14 +5,16 @@
     <div class="container">
         <div class="row">
             <h1 style="text-align: center">News List</h1>
+            <br>
             <div class="d-flex align-items-stretch"> <!-- Added align-items-stretch class -->
                 <a href="{% url 'post-details' pk=last_post.pk %}">
+                    <br><br>
                     <div class="card text-bg-dark">
 
                         <img src="{{ last_post.photo.url }}" class="card-img" alt="Post Photo">
 
                         <div class="card-img-overlay">
-                            <h5 class="card-title">{{ last_post.title }}</h5>
+                            <h4 class="card-title">{{ last_post.title }}</h4>
                             <p class="card-text"></p>
                             <p class="card-text"><small>{{ last_post.created_at|humanize_time }}</small></p>
 
@@ -46,22 +48,25 @@
                 </div>
             </div>
         </div>
-    <br>
+        <br>
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for post in other_posts %}
 
                 <div class="card">
-                    <img src="{{ post.photo.url }}" class="card-img-top" alt="{{ post.title }}">
+                    <a href="{% url 'post-details' pk=post.pk %}">
+                        <img src="{{ post.photo.url }}" class="card-img-top" alt="{{ post.title }}">
+                    </a>
                     <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
+                        <h5 class="card-title text-decoration-none">{{ post.title }}</h5>
                         <p class="card-text"></p>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
-                        <small class="text-body-secondary">{{ post.created_at|humanize_time }}</small>
-                        <small class="text-body-secondary">Comments: {{ post.post_comments.count }}</small>
+                        <small class="text-body-secondary text-decoration-none">{{ post.created_at|humanize_time }}</small>
+                        <small class="text-body-secondary text-decoration-none">Comments: {{ post.post_comments.count }}</small>
                     </div>
+
                 </div>
 
             {% endfor %}
-    </div>
+        </div>
 {% endblock %}

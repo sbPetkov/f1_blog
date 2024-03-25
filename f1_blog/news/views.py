@@ -1,5 +1,7 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
 
 from f1_blog.news.models import Post, PostComment
@@ -17,15 +19,16 @@ class PostListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Fetch the last post
+
         last_post = Post.objects.order_by('-created_at').first()
         context['last_post'] = last_post
-        # Fetch the next two posts
+
         next_two_posts = Post.objects.exclude(id=last_post.id).order_by('-created_at')[:3]
         context['next_two_posts'] = next_two_posts
-        # Fetch all other posts
-        other_posts = Post.objects.exclude(id__in=[last_post.id] + [post.id for post in next_two_posts])
+
+        other_posts = Post.objects.exclude(id__in=[last_post.id] + [post.id for post in next_two_posts]).order_by('-created_at')
         context['other_posts'] = other_posts
+
         return context
 
 
@@ -64,3 +67,16 @@ def toggle_comment_like(request, comment_id):
             comment.likes.add(user)
             liked = True
         return JsonResponse({'liked': liked, 'likes_count': comment.likes.count()})
+
+
+class PostAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = Post
+    template_name = 'news/add_news.html'
+    fields = ['title', 'content', 'photo']
+    permission_required = 'post.add_post'
+    login_url = '/accounts/login/'
+    success_url = reverse_lazy('post-index')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)

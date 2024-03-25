@@ -23,8 +23,6 @@ class VideoListView(ListView):
     template_name = 'videos/video_list.html'
     context_object_name = 'videos'
 
-    paginate_by = 2
-
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.prefetch_related('comments')

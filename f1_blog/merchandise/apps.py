@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class MigrateConfig(AppConfig):
+class MerchandiseConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'migrate'
+    name = 'f1_blog.merchandise'
