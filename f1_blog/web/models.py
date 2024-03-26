@@ -27,3 +27,20 @@ class Profile(models.Model):
                                 on_delete=models.CASCADE,
                                 primary_key=True
                                 )
+
+    email = models.EmailField(
+        blank=True,
+        null=True
+    )
+
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    phone_number = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
+    )
