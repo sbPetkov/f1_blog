@@ -17,8 +17,10 @@ from f1_blog.web.models import Profile
 def index(request):
     today = date.today()
     next_race = Race.objects.filter(start_date__gt=today).order_by('start_date').first()
+    last_news = Post.objects.all().order_by('-created_at')[:2]
     context = {
-        'next_race': next_race
+        'next_race': next_race,
+        'last_news': last_news
     }
 
     return render(request, 'index/index.html', context)
@@ -55,7 +57,6 @@ class LoginUserView(LoginView):
         if redirect_to and url_has_allowed_host_and_scheme(redirect_to, allowed_hosts={self.request.get_host()}):
             return redirect_to
         return super().get_success_url()
-
 
 
 class RegisterUserView(CreateView):
