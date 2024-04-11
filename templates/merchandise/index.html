@@ -35,6 +35,7 @@
     </style>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
             function loadMerchandiseItems(category) {
@@ -49,24 +50,24 @@
                         $('#merchandise-items').empty();
                         data.forEach(function (item) {
                             $('#merchandise-items').append(`
-                        <div class="col">
-                            <div class="card">
-                                <img src="${item.images}" alt="${item.name}">
-                                <div class="card-body">
-                                    <h5 class="card-title">${item.title}</h5>
-                                    <p class="card-text">${item.price} BGN</p>
-                                    <select class="form-select form-select-sm" id="qty-cart">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                    </select>
-                                    <button type="button" value="${item.id}" class="btn btn-secondary add-cart">Add to cart</button>
+                            <div class="col">
+                                <div class="card">
+                                    <img src="${item.images}" alt="${item.name}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${item.title}</h5>
+                                        <p class="card-text">${item.price} BGN</p>
+                                        <select class="form-select form-select-sm qty-cart" data-item-id="${item.id}">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                        </select>
+                                        <button type="button" value="${item.id}" class="btn btn-secondary add-cart">Add to cart</button>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>`);
+                            </div>`);
                         });
                         $('.merchandise-container').fadeIn('slow');
                         $('.fade-line').width($('.categories-container').width());
@@ -83,14 +84,14 @@
                 success: function (data) {
                     data.forEach(function (category) {
                         $('#categories').append(`
-                    <div class="col">
-                        <div class="card">
-                            <img src="${category.images}" class="card-img-top" alt="${category.name}">
-                            <div class="card-body">
-                                <h5 id="${category.name}" class="card-title text-decoration-none">${category.name}</h5>
+                        <div class="col">
+                            <div class="card">
+                                <img src="${category.images}" class="card-img-top" alt="${category.name}">
+                                <div class="card-body">
+                                    <h5 id="${category.name}" class="card-title text-decoration-none">${category.name}</h5>
+                                </div>
                             </div>
-                        </div>
-                    </div>`);
+                        </div>`);
                     });
 
                     $('.card-title').click(function () {
@@ -105,34 +106,32 @@
                     console.error(error);
                 }
             });
-        });
 
-        $(document).on('click', '.add-cart', function (e) {
-            e.preventDefault();
-            var itemId = $(this).val(); // Get the value of the clicked button (item ID)
-            console.log('Item ID:', itemId);
-            $.ajax({
-                type: 'POST',
-                url: '{% url 'cart_add' %}',
-                data: {
-                    item_id: itemId,
-                    item_qty: $('#qty-cart option:selected').text(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                    action: 'post'
-                },
-
-                success: function (json) {
-                    //console.log(json)
-                    document.getElementById("cart_quantity").textContent = json.qty
-                    location.reload();
-                },
-
-                error: function (xhr, errmsg, err) {
-                    // Handle errors if needed
-                }
+            $(document).on('click', '.add-cart', function (e) {
+                e.preventDefault();
+                var itemId = $(this).val(); // Get the value of the clicked button (item ID)
+                var itemQty = $(this).closest('.card').find('.qty-cart').val(); // Get the quantity from the corresponding select element
+                console.log('Item ID:', itemId);
+                console.log('Item Quantity:', itemQty);
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'cart_add' %}',
+                    data: {
+                        item_id: itemId,
+                        item_qty: itemQty,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        action: 'post'
+                    },
+                    success: function (json) {
+                        document.getElementById("cart_quantity").textContent = json.qty;
+                        location.reload();
+                    },
+                    error: function (xhr, errmsg, err) {
+                        console.error(errmsg);
+                    }
+                });
             });
         });
-
-
     </script>
+
 {% endblock %}

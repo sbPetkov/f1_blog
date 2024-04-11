@@ -14,11 +14,11 @@ class Cart:
 
     def add(self, item, quantity):
         item_id = str(item.id)
-        item_qty = str(quantity)
+        item_qty = int(quantity)
         if item_id in self.cart:
-            pass
+            self.cart[item_id] += item_qty
         else:
-            self.cart[item_id] = int(item_qty)
+            self.cart[item_id] = item_qty
         self.session.modified = True
 
     def __len__(self):
@@ -36,11 +36,14 @@ class Cart:
     def update(self, item, quantity):
         item_id = str(item)
         item_qty = int(quantity)
-        our_cart = self.cart
-        our_cart[item_id] = item_qty
-        self.session.modified = True
-        updated_cart = self.cart
-        return updated_cart
+        if item_qty <= 0:
+            self.delete(item_id)
+        else:
+            our_cart = self.cart
+            our_cart[item_id] = item_qty
+            self.session.modified = True
+            updated_cart = self.cart
+            return updated_cart
 
     def delete(self, item):
         item_id = str(item)
@@ -59,3 +62,7 @@ class Cart:
                 if item.id == key:
                     total_price += item.price * value
         return total_price
+
+    def clear(self):
+        self.cart = {}
+        self.session.modified = True

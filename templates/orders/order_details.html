@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Order Items</h2>
+                <ul class="list-unstyled">
+                    {% for item in order_items %}
+                        <div class="card mb-3" style="max-width: 540px;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="{{ item.merchandise.images.url }}" class="img-fluid rounded-start"
+                                         alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ item.merchandise.title }}</h5>
+                                        <p class="card-text">Quantity: {{ item.quantity }}</p>
+                                        <p class="card-text"><small
+                                                class="text-body-secondary">Price: {{ item.subtotal }}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card border-primary mb-3">
+                    <div class="card-header"><h2>Customer Details</h2></div>
+                    <div class="card-body text-primary">
+                        <p class="card-text">Full Name: {{ order.full_name }}</p>
+                        <p class="card-text">Email: {{ order.email }}</p>
+                        <p class="card-text">Phone Number: {{ order.phone_number }}</p>
+                        <p class="card-text">Address: {{ order.address }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Total Price: {{ total_price }}</h2>
+            </div>
+        </div>
+        {% if order.status == 'Pending' %}
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Complete Order</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+
+
+
+{% endblock %}

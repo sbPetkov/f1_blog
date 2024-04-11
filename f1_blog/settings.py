@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'f1_blog.merchandise',
     'f1_blog.apis',
     'f1_blog.cart',
+    'f1_blog.orders',
 
 ]
 

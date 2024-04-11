@@ -6,18 +6,30 @@ from django.contrib import messages
 from ..merchandise.models import Merchandise
 
 
-def cart_summery(request):
+def cart_summary(request):
     cart = Cart(request)
-    cart_products = cart.get_products
-
-    quantities = cart.get_quants
+    cart_products = cart.get_products()
+    quantities = cart.get_quants()
     totals = cart.total()
+
+    user_info = {}  # Initialize an empty dictionary for user information
+
+    if request.user.is_authenticated:
+        # If the user is authenticated, populate user_info with user data
+        user = request.user
+        user_info = {
+            'first_name': user.profile.first_name,
+            'last_name': user.profile.last_name,
+            'email': user.profile.email,
+            'address': user.profile.address,
+            'phone_number': user.profile.phone_number
+        }
 
     context = {
         'cart_products': cart_products,
         'quantities': quantities,
-        'totals': totals
-
+        'totals': totals,
+        'user_info': user_info  # Pass user_info to the template
     }
     return render(request, 'cart_summery/cart_summery.html', context)
 

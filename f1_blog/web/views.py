@@ -78,7 +78,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
 
 class EditProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
-    fields = ['first_name', 'last_name', 'date_of_birth']
+    fields = ['first_name', 'last_name', 'date_of_birth', 'email', 'address', 'phone_number']
     template_name = 'index/edit_profile.html'
 
     def get_object(self, queryset=None):
