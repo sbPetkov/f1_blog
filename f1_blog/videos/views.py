@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from .models import Video, Comment
@@ -10,7 +10,7 @@ class AddVideoView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'videos/add_video.html'
     fields = ['title', 'content', 'video']
     permission_required = 'videos.add_video'
-    login_url = '/accounts/login/'  # Update with your login URL
+    login_url = '/accounts/login/'
     success_url = reverse_lazy('video-index')
 
     def form_valid(self, form):
@@ -58,3 +58,16 @@ class VideoDetailView(DetailView):
             'text': comment.text
         }
         return JsonResponse(data)
+
+
+class VideoEditView(LoginRequiredMixin, UpdateView):
+    model = Video
+    template_name = 'videos/edit_video.html'
+    fields = ['title', 'content', 'video']
+    success_url = reverse_lazy('video-index')
+
+
+class VideoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Video
+    template_name = 'videos/delete_video.html'  # Your template name
+    success_url = reverse_lazy('video-index')

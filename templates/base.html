@@ -12,6 +12,7 @@
     <title>Your F1 news portal</title>
     <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}"/>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-danger bg-gradient">
@@ -60,7 +61,17 @@
                         </a>
                     </li>
                 {% endif %}
-
+                <li class="nav-item mr-2">
+                    <form class="d-flex">
+                        <a href="{% url 'cart_summery' %}" class="btn btn-outline-dark">
+                            <i class="bi-cart-fill me-1"></i>
+                            Cart
+                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">
+                        {{ cart|length }}
+                    </span>
+                        </a>
+                    </form>
+                </li>
                 <li class="nav-item">
                     <form class="d-flex" method="GET" action="{% url 'search-results' %}">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
@@ -69,15 +80,7 @@
                     </form>
                 </li>
             </ul>
-            <form class="d-flex">
-                <a href="{% url 'cart_summery' %}" class="btn btn-outline-dark">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">
-                        {{ cart|length }}
-                    </span>
-                </a>
-            </form>
+
         </div>
     </div>
 </nav>
@@ -85,10 +88,6 @@
 {% block content %}
 {% endblock %}
 
-<!-- Login Modal -->
-
-
-<!-- Register Modal -->
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -97,44 +96,26 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Include your registration form here -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <!-- Add any other buttons you may need -->
             </div>
         </div>
     </div>
 </div>
 
-<footer class="text-center text-lg-start bg-danger bg-gradient">
+<footer class="text-lg-start navbar-dark bg-danger bg-gradient">
     <div class="container d-flex justify-content-center py-5">
-        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
-            <i class="fab fa-facebook-f"></i>
-        </button>
-        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
-            <i class="fab fa-youtube"></i>
-        </button>
-        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
-            <i class="fab fa-instagram"></i>
-        </button>
-        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
-            <i class="fab fa-twitter"></i>
-        </button>
+        <a class="nav-link m-2" href="{% url 'post-index' %}">News   </a>
+        <a class="nav-link m-2" href="{% url 'video-index' %}">Videos   </a>
+        <a class="nav-link m-2" href="{% url 'driver-standings' %}">Standings   </a>
     </div>
 
-    <!-- Copyright -->
     <div class="text-center text-white p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-        © 2020 Copyright:
-        <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+        © 2024 Copyright: F1 blog by Svilen Petkov
     </div>
-    <!-- Copyright -->
 </footer>
-<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap JavaScript Bundle (includes Popper) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

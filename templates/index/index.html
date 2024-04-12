@@ -42,7 +42,8 @@
                                      style="max-height: 100px; width: auto;"/>
                             </div>
                         </div>
-                        <div class="small text-muted">{{ next_race.start_date|date:"d M" }} - {{ next_race.end_date|date:"d M" }}</div>
+                        <div class="small text-muted">{{ next_race.start_date|date:"d M" }}
+                            - {{ next_race.end_date|date:"d M" }}</div>
                         <h2 class="card-title">{{ next_race.title }}</h2>
                         <p class="card-text">Track Length: {{ next_race.track_length }}</p>
                         <a class="btn btn-primary" href="{% url 'tracks' %}">View all →</a>
@@ -54,16 +55,17 @@
                 <div class="row">
                     <div class="col-lg-6">
                         {% for news in last_news %}
-                        <div class="card mb-4">
-                            <a href="#!"><img class="card-img-top"
-                                              src="{{ news.photo.url }}" alt="..."/></a>
-                            <div class="card-body">
-                                <div class="small text-muted">{{ news.created_at }}</div>
-                                <h2 class="card-title h4">{{ news.title }}</h2>
-                                <p class="card-text">{{ news.content|slice:":80" }}...</p>
-                                <a class="btn btn-primary" href="{% url 'post-details' pk=news.pk %}">Read more →</a>
+                            <div class="card mb-4">
+                                <a href="#!"><img class="card-img-top"
+                                                  src="{{ news.photo.url }}" alt="..."/></a>
+                                <div class="card-body">
+                                    <div class="small text-muted">{{ news.created_at }}</div>
+                                    <h2 class="card-title h4">{{ news.title }}</h2>
+                                    <p class="card-text">{{ news.content|slice:":80" }}...</p>
+                                    <a class="btn btn-primary" href="{% url 'post-details' pk=news.pk %}">Read more
+                                        →</a>
+                                </div>
                             </div>
-                        </div>
                         {% endfor %}
                     </div>
                     <div class="col-lg-6">
@@ -93,7 +95,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
             <!-- Side widgets-->
             <div class="col-lg-4">
@@ -109,26 +111,38 @@
                     </div>
                 </div>
                 <!-- Categories widget-->
-                <div class="card mb-4">
-                    <div class="card-header">Categories</div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <ul class="list-unstyled mb-0">
-                                    <li><a href="#!">Web Design</a></li>
-                                    <li><a href="#!">HTML</a></li>
-                                    <li><a href="#!">Freebies</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-sm-6">
-                                <ul class="list-unstyled mb-0">
-                                    <li><a href="#!">JavaScript</a></li>
-                                    <li><a href="#!">CSS</a></li>
-                                    <li><a href="#!">Tutorials</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                <div id="carouselExampleDark" class="carousel carousel-dark slide">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
+                                aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1"
+                                aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2"
+                                aria-label="Slide 3"></button>
                     </div>
+                    <div class="carousel-inner">
+                        <h3 class="align-content-center justify-content-evenly">Check our item selection</h3>
+                        {% for item in merchandise %}
+                            <a href="{% url 'merchandise-list' %}"
+                               class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="10000">
+                                <img src="{{ item.images.url }}" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5 class="bg-white text-dark">{{ item.name }}</h5>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
                 <!-- Side widget-->
                 <div class="card mb-4">

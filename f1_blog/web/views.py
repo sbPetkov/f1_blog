@@ -7,6 +7,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, TemplateView, View, CreateView, UpdateView
 from django.utils.http import url_has_allowed_host_and_scheme
+
+from f1_blog.merchandise.models import Category
 from f1_blog.news.models import Post
 from f1_blog.standings.models import Race
 from f1_blog.videos.models import Video
@@ -18,9 +20,11 @@ def index(request):
     today = date.today()
     next_race = Race.objects.filter(start_date__gt=today).order_by('start_date').first()
     last_news = Post.objects.all().order_by('-created_at')[:2]
+    merchandise = Category.objects.all()
     context = {
         'next_race': next_race,
-        'last_news': last_news
+        'last_news': last_news,
+        'merchandise': merchandise
     }
 
     return render(request, 'index/index.html', context)

@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
 
 from f1_blog.news.models import Post, PostComment
 
@@ -69,7 +69,7 @@ def toggle_comment_like(request, comment_id):
         return JsonResponse({'liked': liked, 'likes_count': comment.likes.count()})
 
 
-class PostAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class PostAddView(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'news/add_news.html'
     fields = ['title', 'content', 'photo']
@@ -80,3 +80,18 @@ class PostAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class PostEditView(LoginRequiredMixin, UpdateView):
+    model = Post
+    template_name = 'news/edit_news.html'
+    fields = ['title', 'content', 'photo']
+    success_url = reverse_lazy('post-index')
+
+
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = 'news/delete_news.html'
+    success_url = reverse_lazy('post-index')
+
+

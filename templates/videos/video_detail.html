@@ -1,65 +1,80 @@
 {% extends 'base.html' %}
+{% load moderator_filter %}
 {% load embed_video_tags %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <h1>{{ video.title }}</h1>
-            <div class="embed-responsive embed-responsive-16by9">
-                {% video video.video '853x480' %}
-            </div>
-            <p>{{ video.content }}</p>
+    <div class="container">
 
-            <!-- Add a Comment form -->
-            <h2>Add a Comment</h2>
-            <form id="comment-form">
-                {% csrf_token %}
-                <div class="input-group mb-3">
-                    <textarea class="form-control" name="text" placeholder="Enter your comment"></textarea>
-                    <button class="btn btn-primary" type="submit">Submit Comment</button>
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1>{{ video.title }}</h1>
+                    {% if user|is_moderator_or_admin %}
+                        <div>
+                            <a href="{% url 'video-edit' video.pk %}" class="btn btn-primary me-2">Edit</a>
+                            <a href="{% url 'video-delete' video.pk %}" class="btn btn-danger">Delete</a>
+                        </div>
+                    {% endif %}
                 </div>
-            </form>
+                <div class="embed-responsive embed-responsive-16by9">
+                    {% video video.video '853x480' %}
+                </div>
+                <p>{{ video.content }}</p>
+                <br><br>
+                {% if user.is_authenticated %}
 
-            <!-- Display comments for this video -->
-            <h2>Comments</h2>
-            <div class="comment-section border rounded p-3"> <!-- Added border, rounded, and padding -->
-                <ul id="comment-list" class="list-unstyled">
-                    {% for comment in comments %}
-                        <li class="comment-item border rounded p-3 mb-3"> <!-- Added border, rounded, and margin -->
-                            {{ comment.author.profile.first_name }}: {{ comment.text }}
-                        </li>
-                    {% endfor %}
-                </ul>
+                    <h2>Add a Comment</h2>
+                    <form id="comment-form">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <textarea class="form-control" name="text" placeholder="Enter your comment"></textarea>
+                            <button class="btn btn-primary" type="submit">Submit Comment</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <h2 class="align-content-around"><a href="{% url 'login' %}?next={{ request.path }}"
+                                                        class="text-decoration-none text-info">Login to comment</a></h2>
+                    <br>
+                {% endif %}
+                <h2>Comments</h2>
+                <div class="comment-section border rounded p-3"> <!-- Added border, rounded, and padding -->
+                    <ul id="comment-list" class="list-unstyled">
+                        {% for comment in comments %}
+                            <li class="comment-item border rounded p-3 mb-3"> <!-- Added border, rounded, and margin -->
+                                {{ comment.author.profile.first_name }}: {{ comment.text }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- AJAX script for submitting comments -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#comment-form').on('submit', function (event) {
-            event.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '{% url "add_comment" video.id %}',
-                data: $(this).serialize(),
-                success: function (response) {
-                    var newComment = '<li class="comment-item border rounded p-3 mb-3">' +
-                        response.author_name + ': ' + response.text +
-                        '</li>';
-                    
-                    // Prepend the new comment to the comment list
-                    $('#comment-list').prepend(newComment);
-                    
-                    // Reset the comment form
-                    $('#comment-form')[0].reset();
-                }
+
+    <!-- AJAX script for submitting comments -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#comment-form').on('submit', function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "add_comment" video.id %}',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        var newComment = '<li class="comment-item border rounded p-3 mb-3">' +
+                            response.author_name + ': ' + response.text +
+                            '</li>';
+
+                        // Prepend the new comment to the comment list
+                        $('#comment-list').prepend(newComment);
+
+                        // Reset the comment form
+                        $('#comment-form')[0].reset();
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 
 {% endblock %}
