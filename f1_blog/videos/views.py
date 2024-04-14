@@ -69,5 +69,5 @@ class VideoEditView(LoginRequiredMixin, UpdateView):
 
 class VideoDeleteView(LoginRequiredMixin, DeleteView):
     model = Video
-    template_name = 'videos/delete_video.html'  # Your template name
+    template_name = 'videos/delete_video.html'
     success_url = reverse_lazy('video-index')

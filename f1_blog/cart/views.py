@@ -12,10 +12,9 @@ def cart_summary(request):
     quantities = cart.get_quants()
     totals = cart.total()
 
-    user_info = {}  # Initialize an empty dictionary for user information
+    user_info = {}
 
     if request.user.is_authenticated:
-        # If the user is authenticated, populate user_info with user data
         user = request.user
         user_info = {
             'first_name': user.profile.first_name,
@@ -29,7 +28,7 @@ def cart_summary(request):
         'cart_products': cart_products,
         'quantities': quantities,
         'totals': totals,
-        'user_info': user_info  # Pass user_info to the template
+        'user_info': user_info
     }
     return render(request, 'cart_summery/cart_summery.html', context)
 

@@ -20,11 +20,13 @@ def index(request):
     today = date.today()
     next_race = Race.objects.filter(start_date__gt=today).order_by('start_date').first()
     last_news = Post.objects.all().order_by('-created_at')[:2]
+    last_videos = Video.objects.all().order_by('-created_at')[:2]
     merchandise = Category.objects.all()
     context = {
         'next_race': next_race,
         'last_news': last_news,
-        'merchandise': merchandise
+        'merchandise': merchandise,
+        'last_videos': last_videos
     }
 
     return render(request, 'index/index.html', context)
